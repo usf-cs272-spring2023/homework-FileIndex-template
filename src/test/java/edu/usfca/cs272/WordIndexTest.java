@@ -498,7 +498,7 @@ public class WordIndexTest {
 	 */
 	@Nested
 	@TestMethodOrder(OrderAnnotation.class)
-	public class D_RealIndexTests {
+	public class E_RealIndexTests {
 		/** Placeholder for index object being tested. */
 		private ForwardIndex<Path> index;
 
