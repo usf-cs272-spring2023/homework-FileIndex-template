@@ -12,7 +12,7 @@ import java.util.List;
  * @param <E> The type of location stored (e.g. String, Path, or URL)
  *
  * @author CS 272 Software Development (University of San Francisco)
- * @version Fall 2022
+ * @version Spring 2023
  */
 public interface ForwardIndex<E> {
 	/**

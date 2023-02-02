@@ -12,24 +12,25 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer.MethodName;
+import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestMethodOrder;
 
 /**
- * Tests the {@link WordIndex} class.
+ * Tests the {@link FileIndex} class.
  *
- * @see WordIndex
+ * @see FileIndex
  * @see ForwardIndex
  *
  * @author CS 272 Software Development (University of San Francisco)
- * @version Fall 2022
+ * @version Spring 2023
  */
-@TestMethodOrder(MethodName.class)
-public class WordIndexTest {
+@TestClassOrder(ClassOrderer.ClassName.class)
+public class FileIndexTest {
 	/** Sample text file. */
 	private static final Path animals = Path.of("src", "test", "resources", "animals.text");
 
@@ -42,24 +43,27 @@ public class WordIndexTest {
 	/** Sample simple file. */
 	private static final Path hello = Path.of("hello.txt");
 
+	/** Sample simple file. */
+	private static final Path world = Path.of("world.txt");
+
 	/** Name of class being tested. */
-	private static final String homework = WordIndex.class.getSimpleName();
+	private static final String homework = FileIndex.class.getSimpleName();
 
 	/**
-	 * Creates an empty {@link WordIndex} and returns it casted as a
+	 * Creates an empty {@link FileIndex} and returns it casted as a
 	 * {@link ForwardIndex}. If this method does not compile, then the
-	 * {@link WordIndex} class is not properly implementing the
-	 * {@link ForwardIndex} interface.
+	 * {@link FileIndex} class is not properly implementing the {@link ForwardIndex}
+	 * interface.
 	 *
 	 * @return new empty text file index
 	 */
 	public static ForwardIndex<Path> createEmpty() {
 		/*
-		 * IF YOU ARE SEEING COMPILE ERRORS... it is likely you have not yet
-		 * properly implemented the interface!
+		 * IF YOU ARE SEEING COMPILE ERRORS... it is likely you have not yet properly
+		 * implemented the interface!
 		 */
 
-		return new WordIndex();
+		return new FileIndex();
 	}
 
 	/**
@@ -78,6 +82,8 @@ public class WordIndexTest {
 		public void initializeIndex() {
 			index = createEmpty();
 			index.add(hello, "hello");
+			index.add(hello, "howdy");
+			index.add(world, "earth");
 		}
 
 		/**
@@ -85,27 +91,28 @@ public class WordIndexTest {
 		 */
 		@Order(1)
 		@Test
-		public void testStringHello() {
-			Assertions.assertTrue(index.toString().contains("hello"),
-					"Override toString() with a useful implementation!");
+		public void testString() {
+			boolean actual = index.toString().contains("hello");
+			String debug = "Override toString() with a useful implementation!";
+			Assertions.assertTrue(actual, debug);
 		}
 
 		/**
-		 * Test number of paths.
+		 * Tests path exists in index.
 		 */
 		@Test
 		@Order(2)
-		public void testSizePaths() {
-			Assertions.assertEquals(1, index.size(), index.toString());
+		public void testHasPathHello() {
+			Assertions.assertTrue(index.has(hello), index.toString());
 		}
 
 		/**
-		 * Tests number of words for path.
+		 * Tests path exists in index.
 		 */
 		@Test
 		@Order(3)
-		public void testSizeWords() {
-			Assertions.assertEquals(1, index.size(hello), index.toString());
+		public void testHasPathWorld() {
+			Assertions.assertTrue(index.has(world), index.toString());
 		}
 
 		/**
@@ -113,17 +120,18 @@ public class WordIndexTest {
 		 */
 		@Test
 		@Order(4)
-		public void testHasPath() {
-			Assertions.assertTrue(index.has(hello), index.toString());
+		public void testNotPathWorld() {
+			Assertions.assertFalse(index.has(empty), index.toString());
 		}
 
 		/**
-		 * Tests word does NOT exist for a path.
+		 * Test number of paths.
 		 */
 		@Test
 		@Order(5)
-		public void testHasWordFalse() {
-			Assertions.assertFalse(index.has(hello, "world"), index.toString());
+		public void testSizePaths() {
+			// hello.txt, world.txt
+			Assertions.assertEquals(2, index.size(), index.toString());
 		}
 
 		/**
@@ -131,15 +139,71 @@ public class WordIndexTest {
 		 */
 		@Test
 		@Order(6)
-		public void testHasWordTrue() {
+		public void testHasWordHello() {
 			Assertions.assertTrue(index.has(hello, "hello"), index.toString());
+		}
+
+		/**
+		 * Tests word DOES exist for a path.
+		 */
+		@Test
+		@Order(7)
+		public void testHasWordHowdy() {
+			Assertions.assertTrue(index.has(hello, "howdy"), index.toString());
+		}
+
+		/**
+		 * Tests word DOES exist for a path.
+		 */
+		@Test
+		@Order(8)
+		public void testNotWordEarth() {
+			Assertions.assertFalse(index.has(hello, "earth"), index.toString());
+		}
+
+		/**
+		 * Tests number of words for path.
+		 */
+		@Test
+		@Order(9)
+		public void testSizeHello() {
+			// hello, howdy
+			Assertions.assertEquals(2, index.size(hello), index.toString());
+		}
+
+		/**
+		 * Tests word DOES exist for a path.
+		 */
+		@Test
+		@Order(10)
+		public void testNotWordHowdy() {
+			Assertions.assertFalse(index.has(world, "howdy"), index.toString());
+		}
+
+		/**
+		 * Tests word DOES exist for a path.
+		 */
+		@Test
+		@Order(11)
+		public void testhasWordEarth() {
+			Assertions.assertTrue(index.has(world, "earth"), index.toString());
+		}
+
+		/**
+		 * Tests number of words for path.
+		 */
+		@Test
+		@Order(12)
+		public void testSizeWorld() {
+			// earth
+			Assertions.assertEquals(1, index.size(world), index.toString());
 		}
 
 		/**
 		 * Tests paths are fetched properly.
 		 */
 		@Test
-		@Order(7)
+		@Order(13)
 		public void testViewPaths() {
 			Assertions.assertTrue(index.view().contains(hello), index.toString());
 		}
@@ -148,58 +212,57 @@ public class WordIndexTest {
 		 * Tests words are fetched properly.
 		 */
 		@Test
-		@Order(8)
+		@Order(14)
 		public void testViewWords() {
-			Assertions.assertTrue(index.view(hello).contains("hello"),
-					index.toString());
+			Assertions.assertTrue(index.view(hello).contains("hello"), index.toString());
 		}
 
 		/**
 		 * Tests size of paths fetched.
 		 */
 		@Test
-		@Order(9)
+		@Order(15)
 		public void testViewPathsSize() {
-			Assertions.assertEquals(1, index.view().size(), index.toString());
+			Assertions.assertEquals(2, index.view().size(), index.toString());
 		}
 
 		/**
 		 * Tests size of words fetched.
 		 */
 		@Test
-		@Order(10)
+		@Order(16)
 		public void testViewWordsSize() {
-			Assertions.assertEquals(1, index.view(hello).size(), index.toString());
+			Assertions.assertEquals(2, index.view(hello).size(), index.toString());
 		}
 
 		/**
 		 * Tests adding same location/word pair twice has no impact.
 		 */
 		@Test
-		@Order(11)
+		@Order(17)
 		public void testDoubleAdd() {
 			index.add(hello, "hello");
-			Assertions.assertEquals(1, index.size(hello), index.toString());
+			Assertions.assertEquals(2, index.size(hello), index.toString());
 		}
 
 		/**
 		 * Tests adding new word for a location.
 		 */
 		@Test
-		@Order(12)
+		@Order(18)
 		public void testAddNewWord() {
-			index.add(hello, "world");
-			Assertions.assertEquals(2, index.size(hello), index.toString());
+			index.add(hello, "aloha");
+			Assertions.assertEquals(3, index.size(hello), index.toString());
 		}
 
 		/**
 		 * Tests adding new location.
 		 */
 		@Test
-		@Order(13)
+		@Order(19)
 		public void testAddNewPath() {
-			index.add(Path.of("world.txt"), "world");
-			Assertions.assertEquals(2, index.size(), index.toString());
+			index.add(Path.of("moons.txt"), "europa");
+			Assertions.assertEquals(3, index.size(), index.toString());
 		}
 	}
 
@@ -423,10 +486,8 @@ public class WordIndexTest {
 			index.addAll(other);
 
 			Assertions.assertEquals(3, index.size(), index.toString());
-			Assertions.assertEquals(4, index.view(Path.of("letters.txt")).size(),
-					index.toString());
-			Assertions.assertEquals(2, other.view(Path.of("letters.txt")).size(),
-					other.toString());
+			Assertions.assertEquals(4, index.view(Path.of("letters.txt")).size(), index.toString());
+			Assertions.assertEquals(2, other.view(Path.of("letters.txt")).size(), other.toString());
 		}
 	}
 
@@ -556,8 +617,7 @@ public class WordIndexTest {
 		@Test
 		public void testPaths() {
 			Set<Path> expected = Set.of(animals, sentences);
-			Assertions.assertTrue(index.view().containsAll(expected),
-					index.toString());
+			Assertions.assertTrue(index.view().containsAll(expected), index.toString());
 		}
 
 		/**
@@ -566,10 +626,9 @@ public class WordIndexTest {
 		@Order(6)
 		@Test
 		public void testWords() {
-			Set<String> expected = Set.of("okapi", "mongoose", "loris", "axolotl",
-					"narwhal", "platypus", "echidna", "tarsier");
-			Assertions.assertTrue(index.view(animals).containsAll(expected),
-					index.toString());
+			Set<String> expected = Set.of("okapi", "mongoose", "loris", "axolotl", "narwhal", "platypus", "echidna",
+					"tarsier");
+			Assertions.assertTrue(index.view(animals).containsAll(expected), index.toString());
 		}
 	}
 
@@ -588,10 +647,10 @@ public class WordIndexTest {
 			String debug = "\nDo not override default methods in " + homework
 					+ "! For this homework, only implement those in the interface.\n";
 
-			Method[] methods = WordIndex.class.getMethods();
+			Method[] methods = FileIndex.class.getMethods();
 
 			long found = Arrays.stream(methods)
-					.filter(m -> m.getDeclaringClass().equals(WordIndex.class))
+					.filter(m -> m.getDeclaringClass().equals(FileIndex.class))
 					.filter(m -> m.getName().startsWith("add"))
 					.filter(m -> m.toString().contains("List"))
 					.count();
@@ -608,10 +667,10 @@ public class WordIndexTest {
 			String debug = "\nDo not override default methods in " + homework
 					+ "! For this homework, only implement those in the interface.\n";
 
-			Method[] methods = WordIndex.class.getMethods();
+			Method[] methods = FileIndex.class.getMethods();
 
 			long found = Arrays.stream(methods)
-					.filter(m -> m.getDeclaringClass().equals(WordIndex.class))
+					.filter(m -> m.getDeclaringClass().equals(FileIndex.class))
 					.filter(m -> m.getName().startsWith("add"))
 					.filter(m -> m.toString().contains("String[]"))
 					.count();
@@ -628,10 +687,10 @@ public class WordIndexTest {
 			String debug = "\nDo not override default methods in " + homework
 					+ "! For this homework, only implement those in the interface.\n";
 
-			Method[] methods = WordIndex.class.getMethods();
+			Method[] methods = FileIndex.class.getMethods();
 
 			long found = Arrays.stream(methods)
-					.filter(m -> m.getDeclaringClass().equals(WordIndex.class))
+					.filter(m -> m.getDeclaringClass().equals(FileIndex.class))
 					.filter(m -> m.getName().startsWith("add"))
 					.filter(m -> m.toString().contains("ForwardIndex"))
 					.count();
@@ -648,9 +707,7 @@ public class WordIndexTest {
 	 */
 	private static String[] getWords(Path path) {
 		try {
-			return Files.readString(path, StandardCharsets.UTF_8)
-					.toLowerCase()
-					.split("\\W+");
+			return Files.readString(path, StandardCharsets.UTF_8).toLowerCase().split("\\W+");
 		}
 		catch (IOException e) {
 			Assertions.fail(e);
