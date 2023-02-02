@@ -1,4 +1,4 @@
-WordIndex
+FileIndex
 =================================================
 
 ![Points](../../blob/badges/points.svg)
@@ -9,7 +9,7 @@ For this homework, you will create a class that implements the `ForwardIndex` in
 
 Below are some hints that may help with this homework assignment:
 
-  - The code will not compile until you implement the `ForwardIndex` interface in the `WordIndex` class for `Path` objects properly.
+  - The code **will not compile** until you implement the `ForwardIndex` interface in the `FileIndex` class for `Path` objects properly.
 
   - When creating a default implementation, you can call other methods in the interface even if they are not implemented.
 
@@ -25,4 +25,4 @@ Use the "Tasks" view in Eclipse to find the `TODO` comments for what need to be 
 
 The tests are provided in the `src/test/` directory; do not modify any of the files in that directory. Check the run details on GitHub Actions for how many points each test group is worth. 
 
-See the [Homework Guides](https://usf-cs272-fall2022.github.io/guides/homework/) for additional details on homework requirements and submission.
+See the [Homework Resources](https://usf-cs272-spring2023.github.io/resources/homework/) for additional details on homework requirements and submission.
